@@ -62,13 +62,6 @@ func ListUsers(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(1, err.Error())
 		return
 	}
-
-	// dbURL := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable", "postgres", "postgres", "localhost", 5432, "dpay_helpdesk")
-	// db, err := sqlx.Open("postgres", dbURL)
-	// if err != nil {
-	// 	fmt.Println(1, err.Error())
-	// 	return
-	// }
 	defer db.Close()
 
 	query := `SELECT * from "user";`
@@ -194,14 +187,11 @@ func ShowIssueStatus(res http.ResponseWriter, req *http.Request) {
 // }
 func HandleNewUSer(res http.ResponseWriter, req *http.Request) {
 	var userdetails userrequest
-	// var userinfo user
 
 	err := json.NewDecoder(req.Body).Decode(&userdetails)
 	if err != nil {
 		return
 	}
-
-	// fmt.Println(userdetails.Id, userdetails.Email)
 
 	dbURL := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable", "postgres", "postgres", "localhost", 5432, "dpay_helpdesk")
 	d, err := sqlx.Open("postgres", dbURL)
@@ -210,9 +200,6 @@ func HandleNewUSer(res http.ResponseWriter, req *http.Request) {
 	}
 
 	ctx := req.Context()
-	// query := `INSERT INTO public."user"(id, email) VALUES ($1,$2) RETURNING id, email;`
-
-	// err = d.GetContext(ctx, &userinfo, query, userdetails.Id, userdetails.Email)
 
 	query := `INSERT INTO public."user"(id, email, user_type) VALUES ($1,$2,$3);`
 
