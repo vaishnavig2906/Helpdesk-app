@@ -135,7 +135,7 @@ func ListIssues(w http.ResponseWriter, r *http.Request) {
 
 func GetDetailsByID(res http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
-	id := vars["UserId"]
+	id := vars["User_Id"]
 	fmt.Println(id)
 
 	dbURL := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable", "postgres", "postgres", "localhost", 5432, "dpay_helpdesk")
@@ -159,7 +159,7 @@ func GetDetailsByID(res http.ResponseWriter, req *http.Request) {
 
 func ShowIssueStatus(res http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
-	id := vars["IssueId"]
+	id := vars["Issue_Id"]
 	fmt.Println(id)
 
 	dbURL := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable", "postgres", "postgres", "localhost", 5432, "dpay_helpdesk")
@@ -336,19 +336,19 @@ func handleRequests() {
 	r := mux.NewRouter().StrictSlash(true)
 
 	//GET requests
-	r.HandleFunc("/hello", Hello).Methods("GET")                           //Welcome to the helpdesk
-	r.HandleFunc("/listusers", ListUsers).Methods("GET")                   //List all the users
-	r.HandleFunc("/listissues", ListIssues).Methods("GET")                 //List all the issues
-	r.HandleFunc("/user/{UserId}", GetDetailsByID).Methods("GET")          //Get User Status
-	r.HandleFunc("/issuestatus/{IssueId}", ShowIssueStatus).Methods("GET") //Get issue status
+	r.HandleFunc("/hello", Hello).Methods("GET")                             //Welcome to the helpdesk
+	r.HandleFunc("/list_users", ListUsers).Methods("GET")                    //List all the users
+	r.HandleFunc("/list_issues", ListIssues).Methods("GET")                  //List all the issues
+	r.HandleFunc("/user/{User_Id}", GetDetailsByID).Methods("GET")           //Get User Status
+	r.HandleFunc("/issue_status/{Issue_Id}", ShowIssueStatus).Methods("GET") //Get issue status
 
 	//POST requests
-	r.HandleFunc("/newuser", HandleNewUSer).Methods("POST")    //Register as a new User
-	r.HandleFunc("/postissue", HandleNewIssue).Methods("POST") //Submit a Issue
+	r.HandleFunc("/new_user", HandleNewUSer).Methods("POST")    //Register as a new User
+	r.HandleFunc("/post_issue", HandleNewIssue).Methods("POST") //Submit a Issue
 
 	//PUT requests
-	r.HandleFunc("/assingcustomercare", AssignCustomerCare).Methods("PUT") //Assing Customer Care to a Query
-	r.HandleFunc("/solvequery", SolveQuery).Methods("PUT")                 //Solve query and change status, description and update time
+	r.HandleFunc("/assing_customer_care", AssignCustomerCare).Methods("PUT") //Assing Customer Care to a Query
+	r.HandleFunc("/solve_query", SolveQuery).Methods("PUT")                  //Solve query and change status, description and update time
 
 	log.Fatal(http.ListenAndServe(":1001", r))
 }
