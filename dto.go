@@ -2,19 +2,19 @@ package main
 
 import "time"
 
-type user struct {
+type User struct {
 	Id       string `db:"id"`
 	Email    string `db:"email"`
 	Usertype string `db:"user_type"`
 }
 
-type userrequest struct {
+type UserRequest struct {
 	Id       string `json:"id"`
 	Email    string `json:"email"`
 	Usertype string `json:"user_type"`
 }
 
-type issue struct {
+type Issue struct {
 	Id          string    `db:"id"`
 	Title       string    `db:"title"`
 	Description string    `db:"description"`
@@ -28,7 +28,7 @@ type issue struct {
 	Belongs_to  string    `db:"belongs_to"`
 }
 
-type issuerequest struct {
+type IssueRequest struct {
 	Id          string    `json:"id"`
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
