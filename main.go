@@ -5,52 +5,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
-
-type user struct {
-	Id       string `db:"id"`
-	Email    string `db:"email"`
-	Usertype string `db:"user_type"`
-}
-
-type userrequest struct {
-	Id       string `json:"id"`
-	Email    string `json:"email"`
-	Usertype string `json:"user_type"`
-}
-
-type issue struct {
-	Id          string    `db:"id"`
-	Title       string    `db:"title"`
-	Description string    `db:"description"`
-	Reported_by string    `db:"reported_by"`
-	Resolved_by string    `db:"resolved_by"`
-	Status      string    `db:"status"`
-	Resolved_at time.Time `db:"resolved_at"`
-	Created_by  string    `db:"created_by"`
-	Created_at  time.Time `db:"created_at"`
-	Updated_at  time.Time `db:"updated_at"`
-	Belongs_to  string    `db:"belongs_to"`
-}
-
-type issuerequest struct {
-	Id          string    `json:"id"`
-	Title       string    `json:"title"`
-	Description string    `json:"description"`
-	ReportedBy  string    `json:"reported_by"`
-	ResolvedBy  string    `json:"resolved_by"`
-	Status      string    `json:"status"`
-	ResolvedAt  time.Time `json:"resolved_at"`
-	CreatedBy   string    `json:"created_by"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
-	BelongsTo   string    `json:"belongs_to"`
-}
 
 func ListUsers(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Complete User Data")
