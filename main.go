@@ -8,6 +8,8 @@ import (
 
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
+	"github.com/vaishnavi2906/helpdesk/issue"
+	"github.com/vaishnavi2906/helpdesk/user"
 )
 
 type HelpDesk interface {
@@ -32,7 +34,7 @@ type HelpDesk interface {
 //     "belongs_to":"1"
 // }
 func HandleNewIssue(res http.ResponseWriter, req *http.Request) {
-	var IssueDetails IssueRequest
+	var IssueDetails issue.IssueRequest
 
 	err := json.NewDecoder(req.Body).Decode(&IssueDetails)
 	if err != nil {
@@ -85,7 +87,7 @@ func AssignCustomerCare(res http.ResponseWriter, req *http.Request) {
 
 func ListUsers(res http.ResponseWriter, req *http.Request) {
 	fmt.Println("Complete User Data")
-	var UserInfo User
+	var UserInfo user.User
 
 	db, err := init_DB()
 	if err != nil {
@@ -124,7 +126,7 @@ func ListUsers(res http.ResponseWriter, req *http.Request) {
 //     "type":"Customer"
 // }
 func HandleNewUSer(res http.ResponseWriter, req *http.Request) {
-	var UserDetails UserRequest
+	var UserDetails user.UserRequest
 
 	err := json.NewDecoder(req.Body).Decode(&UserDetails)
 	if err != nil {
@@ -162,7 +164,7 @@ func GetDetailsByID(res http.ResponseWriter, req *http.Request) {
 	}
 	ctx := req.Context()
 	query := `Select * FROM "user" WHERE id=$1;`
-	var UserInfo User
+	var UserInfo user.User
 
 	err = db.GetContext(ctx, &UserInfo, query, id)
 	if err != nil {
@@ -184,7 +186,7 @@ func ShowIssueStatus(res http.ResponseWriter, req *http.Request) {
 	}
 	ctx := req.Context()
 	query := `Select * FROM "issue" WHERE id=$1;`
-	var IssueInfo Issue
+	var IssueInfo issue.Issue
 
 	err = db.GetContext(ctx, &IssueInfo, query, id)
 	if err != nil {
@@ -207,7 +209,7 @@ func ShowIssueStatus(res http.ResponseWriter, req *http.Request) {
 // 	"description":"please restart the service"
 // }
 func UpdateIssueStatus(res http.ResponseWriter, req *http.Request) {
-	var IssueDetails IssueRequest
+	var IssueDetails issue.IssueRequest
 
 	err := json.NewDecoder(req.Body).Decode(&IssueDetails)
 	if err != nil {
@@ -238,7 +240,7 @@ func UpdateIssueStatus(res http.ResponseWriter, req *http.Request) {
 
 func ListIssues(res http.ResponseWriter, req *http.Request) {
 	fmt.Println("Complete Issue Data")
-	var IssueInfo Issue
+	var IssueInfo issue.Issue
 
 	db, err := init_DB()
 	if err != nil {
