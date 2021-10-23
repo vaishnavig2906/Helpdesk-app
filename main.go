@@ -8,60 +8,7 @@ import (
 
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
-	"github.com/vaishnavi2906/helpdesk/issue"
-	"github.com/vaishnavi2906/helpdesk/user"
 )
-
-type HelpDesk interface {
-	ListUsers(res http.ResponseWriter, req *http.Request)
-	ListIssues(res http.ResponseWriter, req *http.Request)
-	GetDetailsByID(res http.ResponseWriter, req *http.Request)
-	ShowIssueStatus(res http.ResponseWriter, req *http.Request)
-	HandleNewUSer(res http.ResponseWriter, req *http.Request)
-	HandleNewIssue(res http.ResponseWriter, req *http.Request)
-	Hello(res http.ResponseWriter, req *http.Request)
-	AssignCustomerCare(res http.ResponseWriter, req *http.Request)
-	UpdateIssueStatus(res http.ResponseWriter, req *http.Request)
-}
-
-//Handle new Issue
-// {
-//     "id":"1",
-//     "title":"Server Issue",
-//     "description":"my server is not running",
-//     "reported_by":"1",
-//     "created_by":"1",
-//     "belongs_to":"1"
-// }
-func HandleNewIssue(res http.ResponseWriter, req *http.Request) {
-	var IssueDetails issue.IssueRequest
-
-	err := json.NewDecoder(req.Body).Decode(&IssueDetails)
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-
-	db, err := init_DB()
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-
-	ctx := req.Context()
-	query := `INSERT INTO public.issue(
-		id, title, description, reported_by, resolved_by, status ,resolved_at, created_by, created_at, updated_at, belongs_to)
-		VALUES ($1, $2, $3, $4, 'Not assinged', DEFAULT, CURRENT_TIMESTAMP, $5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, $6);`
-
-	_, err = db.ExecContext(ctx, query, IssueDetails.Id, IssueDetails.Title, IssueDetails.Description, IssueDetails.ReportedBy, IssueDetails.CreatedBy, IssueDetails.BelongsTo)
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-
-	fmt.Fprintf(res, "Succesfully Submitted the issue")
-	db.Close()
-}
 
 func AssignCustomerCare(res http.ResponseWriter, req *http.Request) {
 	db, err := init_DB()
@@ -87,7 +34,7 @@ func AssignCustomerCare(res http.ResponseWriter, req *http.Request) {
 
 func ListUsers(res http.ResponseWriter, req *http.Request) {
 	fmt.Println("Complete User Data")
-	var UserInfo user.User
+	var UserInfo User
 
 	db, err := init_DB()
 	if err != nil {
@@ -126,7 +73,7 @@ func ListUsers(res http.ResponseWriter, req *http.Request) {
 //     "type":"Customer"
 // }
 func HandleNewUSer(res http.ResponseWriter, req *http.Request) {
-	var UserDetails user.UserRequest
+	var UserDetails UserRequest
 
 	err := json.NewDecoder(req.Body).Decode(&UserDetails)
 	if err != nil {
@@ -164,7 +111,7 @@ func GetDetailsByID(res http.ResponseWriter, req *http.Request) {
 	}
 	ctx := req.Context()
 	query := `Select * FROM "user" WHERE id=$1;`
-	var UserInfo user.User
+	var UserInfo User
 
 	err = db.GetContext(ctx, &UserInfo, query, id)
 	if err != nil {
@@ -186,7 +133,7 @@ func ShowIssueStatus(res http.ResponseWriter, req *http.Request) {
 	}
 	ctx := req.Context()
 	query := `Select * FROM "issue" WHERE id=$1;`
-	var IssueInfo issue.Issue
+	var IssueInfo Issue
 
 	err = db.GetContext(ctx, &IssueInfo, query, id)
 	if err != nil {
@@ -209,7 +156,7 @@ func ShowIssueStatus(res http.ResponseWriter, req *http.Request) {
 // 	"description":"please restart the service"
 // }
 func UpdateIssueStatus(res http.ResponseWriter, req *http.Request) {
-	var IssueDetails issue.IssueRequest
+	var IssueDetails IssueRequest
 
 	err := json.NewDecoder(req.Body).Decode(&IssueDetails)
 	if err != nil {
@@ -240,7 +187,7 @@ func UpdateIssueStatus(res http.ResponseWriter, req *http.Request) {
 
 func ListIssues(res http.ResponseWriter, req *http.Request) {
 	fmt.Println("Complete Issue Data")
-	var IssueInfo issue.Issue
+	var IssueInfo Issue
 
 	db, err := init_DB()
 	if err != nil {
@@ -274,6 +221,45 @@ func ListIssues(res http.ResponseWriter, req *http.Request) {
 
 func Hello(res http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(res, "Hello Welcome to helpdesk")
+}
+
+//Handle new Issue
+// {
+//     "id":"1",
+//     "title":"Server Issue",
+//     "description":"my server is not running",
+//     "reported_by":"1",
+//     "created_by":"1",
+//     "belongs_to":"1"
+// }
+func HandleNewIssue(res http.ResponseWriter, req *http.Request) {
+	var IssueDetails IssueRequest
+
+	err := json.NewDecoder(req.Body).Decode(&IssueDetails)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	db, err := init_DB()
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	ctx := req.Context()
+	query := `INSERT INTO public.issue(
+		id, title, description, reported_by, resolved_by, status ,resolved_at, created_by, created_at, updated_at, belongs_to)
+		VALUES ($1, $2, $3, $4, 'Not assinged', DEFAULT, CURRENT_TIMESTAMP, $5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, $6);`
+
+	_, err = db.ExecContext(ctx, query, IssueDetails.Id, IssueDetails.Title, IssueDetails.Description, IssueDetails.ReportedBy, IssueDetails.CreatedBy, IssueDetails.BelongsTo)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	fmt.Fprintf(res, "Succesfully Submitted the issue")
+	db.Close()
 }
 
 func main() {

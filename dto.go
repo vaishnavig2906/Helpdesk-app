@@ -1,4 +1,4 @@
-package issue
+package main
 
 import "time"
 
@@ -28,4 +28,16 @@ type IssueRequest struct {
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 	BelongsTo   string    `json:"belongs_to"`
+}
+
+type User struct {
+	Id       string `db:"id"`
+	Email    string `db:"email"`
+	Usertype string `db:"user_type"`
+}
+
+type UserRequest struct {
+	Id       string `json:"id"`
+	Email    string `json:"email"`
+	Usertype string `json:"user_type"`
 }
